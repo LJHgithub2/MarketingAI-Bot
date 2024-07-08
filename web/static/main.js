@@ -3,6 +3,8 @@ document
     .addEventListener('submit', function (event) {
         event.preventDefault();
         const inputValue = document.getElementById('info-input').value;
+        // 스피너 보이기
+        showSpinner();
 
         // 서버로 비동기 요청 보내기
         fetch('http://localhost:8000/mysite/get_info', {
@@ -19,8 +21,24 @@ document
             })
             .catch((error) => {
                 console.error('Error:', error);
+            })
+            .finally(() => {
+                // 스피너 숨기기
+                hideSpinner();
             });
     });
+
+// 스피너를 보이는 함수
+function showSpinner() {
+    document.querySelector('.spinner').style.display = 'block';
+    document.querySelector('.overlay').style.display = 'block';
+}
+
+// 스피너를 숨기는 함수
+function hideSpinner() {
+    document.querySelector('.spinner').style.display = 'none';
+    document.querySelector('.overlay').style.display = 'none';
+}
 
 // JSON 데이터를 페이지에 출력하는 함수
 function renderData(jsonData) {
