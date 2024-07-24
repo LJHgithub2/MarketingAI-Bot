@@ -1,0 +1,1 @@
+pip install langchainhub openai python-dotenv langchain langchain_community langchain-openai faiss-cpu

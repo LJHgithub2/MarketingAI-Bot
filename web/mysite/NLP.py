@@ -7,6 +7,7 @@ from langchain import hub
 from dotenv import load_dotenv
 import re
 from pathlib import Path
+import pandas as pd
 
 # BASE_DIR은 Django 프로젝트의 루트 디렉토리를 나타냅니다.
 BASE_DIR = Path(__file__).resolve().parent
@@ -25,9 +26,18 @@ print(f"Loading CSV file from: {CSV_FILE_PATH}")
 if not CSV_FILE_PATH.exists():
     raise FileNotFoundError(f"File not found: {CSV_FILE_PATH}")
       
+filtered_file_path = "./filtered_output.csv"
 
+# pandas를 사용하여 CSV 파일 로드
+df = pd.read_csv(CSV_FILE_PATH)
+
+# 해쉬태그 컬럼에서 '#이벤트' 또는 '#EVENT'를 포함하는 행 필터링
+df_filtered = df[~df['해쉬태그'].str.contains('#이벤트|#EVENT', case=False, na=False)]
+
+# 필터링된 데이터를 임시 CSV 파일로 저장
+df_filtered.to_csv(filtered_file_path, index=False)
 # CSV 데이터 로드
-loader = CSVLoader(file_path='C:\code\MarketingAI-Bot\output2.csv',
+loader = CSVLoader(file_path=filtered_file_path,
                    encoding = 'UTF-8')
 data = loader.load()
 
@@ -43,8 +53,12 @@ retriever = vectorstore.as_retriever(
     search_kwargs={"score_threshold": 0.5, "k": 7},
 )
 
-# 프롬프트 설정
+# 프롬프트 템플릿 불러오기
 prompt = hub.pull("rlm/rag-prompt")
+# 프롬프트 내용 추가 (말투 동기화)
+additional_content = "\nPlease ensure to provide detailed references and explanations in a concise manner."
+prompt.messages[0].prompt.template += additional_content
+
 # llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=GPT_API_KEY)
 llm = ChatOpenAI(model="gpt-4-turbo",openai_api_key=GPT_API_KEY)
 

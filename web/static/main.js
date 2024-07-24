@@ -4,6 +4,7 @@ document
         event.preventDefault();
         const inputValue = document.getElementById('info-input').value;
         // 스피너 보이기
+        console.log(inputValue);
         showSpinner();
 
         // 서버로 비동기 요청 보내기
