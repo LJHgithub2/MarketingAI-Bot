@@ -45,8 +45,18 @@ function hideSpinner() {
 function renderData(jsonData) {
     const section1Container = document.getElementById('section1');
     const section2Container = document.getElementById('section2');
+    const section3Container = document.getElementById('section3');
     section1Container.innerHTML = '';
     section2Container.innerHTML = '';
+    section3Container.innerHTML = '';
+
+    // Section 2 데이터 출력
+    const section2Div = document.createElement('div');
+    section2Div.classList.add('post');
+    const section2Content = document.createElement('p');
+    section2Content.textContent = jsonData.section2;
+    section2Div.appendChild(section2Content);
+    section2Container.appendChild(section2Div);
 
     // Section 1 데이터 출력
     jsonData.section1.forEach((post) => {
@@ -77,13 +87,24 @@ function renderData(jsonData) {
         section1Container.appendChild(postDiv);
     });
 
-    // Section 2 데이터 출력
-    const section2Div = document.createElement('div');
-    section2Div.classList.add('post');
-    const section2Content = document.createElement('p');
-    section2Content.textContent = jsonData.section2;
-    section2Div.appendChild(section2Content);
-    section2Container.appendChild(section2Div);
+    // Section 3 데이터 출력
+    jsonData.section3.forEach((post) => {
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+
+        // const pagenumberP = document.createElement('p');
+        // pagenumberP.textContent = `페이지 번호: ${post['페이지 번호']}`;
+        // postDiv.appendChild(pagenumberP);
+
+        const contentP = document.createElement('p');
+        contentP.textContent = `제품 정보: ${post['제품 정보']}`;
+        postDiv.appendChild(contentP);
+
+        const br_tag = document.createElement('br');
+        postDiv.appendChild(br_tag);
+
+        section3Container.appendChild(postDiv);
+    });
 }
 
 // 페이지 로드 시 데이터 출력
